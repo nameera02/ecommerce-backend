@@ -7,6 +7,7 @@ import projectRoutes from "./Routes/projectRoutes.js";
 import clientRoutes from "./Routes/clientRoutes.js";
 import productRoutes from "./Routes/productRoutes.js";
 import blogRoutes from "./Routes/blogRoutes.js";
+import contactRoutes from "./Routes/contactRoutes.js";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/api", projectRoutes);
 app.use("/api", clientRoutes);
 app.use("/api", productRoutes);
 app.use("/api", blogRoutes);
+app.use('/api', contactRoutes);
 
 
 

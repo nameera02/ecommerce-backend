@@ -16,7 +16,7 @@ const upload = multer({
 });
 
 // Define routes
-router.post('/team', upload.single('image'), createTeamMember);
+router.post('/team', createTeamMember);
 router.get('/team', getAllTeamMembers);
 router.get('/team/:id', getTeamMemberById);
 router.put('/team/:id', upload.single('image'), updateTeamMember);

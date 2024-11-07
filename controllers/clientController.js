@@ -62,7 +62,14 @@ export const createClient = async (req, res) => {
 export const getAllClients = async (req, res) => {
   try {
     const clients = await Client.find();
-    res.status(200).json({ clients });
+    const clientsWithCorrectImagePath = clients.map(client => {
+      const correctImagePath = client.imagePath.replace(/\\+/g, '/');
+      return {
+        ...client.toObject(),
+        imagePath: `http://localhost:3000/${correctImagePath}`
+      };
+    });
+    res.status(200).json({ clients: clientsWithCorrectImagePath });
   } catch (error) {
     res.status(500).json({ message: "Error retrieving clients", error });
   }

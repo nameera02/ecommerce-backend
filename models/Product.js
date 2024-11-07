@@ -8,10 +8,9 @@ const productSchema = new mongoose.Schema({
   aval:  { 
     type: String, 
     enum: ['instock', 'outofstock','inorder'], 
-    required: true 
   },
   detail: { type: String, required: true },
   imagePath: { type: String, required: true }
 }, { timestamps: true });
 
-export default mongoose.model("Product", productSchema);
+export default mongoose.model("Product", productSchema)

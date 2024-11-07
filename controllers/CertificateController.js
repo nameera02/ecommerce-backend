@@ -20,6 +20,8 @@ export const createCertificate = async (req, res) => {
       }
   
       const { sr_no,name } = req.body;
+      console.log(req.body);
+      
       const image = req.file;
   
       // Check if the required fields are provided
@@ -59,8 +61,15 @@ export const createCertificate = async (req, res) => {
 // Function to get all certificates
 export const getAllCertificates = async (req, res) => {
   try {
-    const certificates = await Certificate.find();
-    res.status(200).json(certificates);
+    const certificates = await Certificate.find().sort({ sr_no: 1 }); // Sort by sno in ascending order
+    const certificatesWithCorrectImagePath = certificates.map(certificate => {
+      const correctImagePath = certificate.imagePath.replace(/\\+/g, '/');
+      return {
+        ...certificate.toObject(),
+        imagePath: `http://localhost:3000/${correctImagePath}`
+      };
+    });
+    res.status(200).json({certificates:certificatesWithCorrectImagePath});
   } catch (error) {
     res.status(500).json({ message: "Error retrieving certificates", error });
   }

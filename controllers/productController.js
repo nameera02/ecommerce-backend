@@ -38,6 +38,8 @@ export const createProduct = async (req, res) => {
     }
 
     const { name, sr_no, model, price, aval, detail } = req.body;
+    console.log(req.body);
+    
     const image = req.file;
     
     if (!name || !sr_no || !model || !price || !aval|| !detail || !image) {
@@ -45,6 +47,18 @@ export const createProduct = async (req, res) => {
     }
 
     try {
+      const existingProducts = await Product.find({ sr_no: { $gte: sr_no } })
+      .sort({ sr_no: -1 }); // Sort in descending order
+
+    // If there are existing certificates, increment their sr_no
+    if (existingProducts.length > 0) {
+      // Loop through existing certificates and update their sr_no
+      for (let product of existingProducts) {
+        product.sr_no += 1; // Increment sr_no
+        await product.save(); // Save the updated certificate
+      }
+    }
+
       const product = new Product({
         name,
         sr_no,
@@ -66,8 +80,15 @@ export const createProduct = async (req, res) => {
 // Get all products
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
-    res.status(200).json({ products });
+    const products = await Product.find().sort({ sr_no: 1 });;
+    const productsWithCorrectImagePath = products.map(product => {
+      const correctImagePath = product.imagePath.replace(/\\+/g, '/');
+      return {
+        ...product.toObject(),
+        imagePath: `http://localhost:3000/${correctImagePath}`
+      };
+    });
+    res.status(200).json({ products:productsWithCorrectImagePath });
   } catch (error) {
     res.status(500).json({ message: "Error retrieving products", error });
   }

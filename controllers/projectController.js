@@ -37,7 +37,7 @@ export const createProject = async (req, res) => {
 // Function to get all projects
 export const getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.find();
+    const projects = await Project.find().sort({ sr_no: 1 });
     res.status(200).json({ projects });
   } catch (error) {
     res.status(500).json({ message: "Error retrieving projects", error });
